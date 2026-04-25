@@ -1,0 +1,52 @@
+{
+  "manifest_version": 3,
+  "name": "Sheets Tab Groups",
+  "version": "1.0.0",
+  "description": "Group Google Sheets tabs like Chrome Tab Groups — named, color-coded, collapsible, and synced via the spreadsheet itself.",
+  "permissions": [
+    "identity",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://docs.google.com/spreadsheets/*",
+    "https://sheets.googleapis.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://docs.google.com/spreadsheets/d/*/edit*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "oauth2": {
+    "client_id": "998737102718-fnmho8em9bec0b5j4tbru6talc0plptb.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/spreadsheets",
+      "https://www.googleapis.com/auth/userinfo.profile",
+      "https://www.googleapis.com/auth/userinfo.email"
+    ]
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

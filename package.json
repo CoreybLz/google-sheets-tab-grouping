@@ -1,0 +1,24 @@
+{
+  "name": "google-sheets-tab-grouping",
+  "version": "1.0.0",
+  "description": "",
+  "main": "background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CoreybLz/google-sheets-tab-grouping.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/CoreybLz/google-sheets-tab-grouping/issues"
+  },
+  "homepage": "https://github.com/CoreybLz/google-sheets-tab-grouping#readme",
+  "dependencies": {
+    "canvas": "^3.2.3"
+  }
+}
