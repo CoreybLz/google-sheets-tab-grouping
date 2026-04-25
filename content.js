@@ -439,8 +439,14 @@ function buildChip(group) {
   chip.append(dot, label, arrow);
 
   chip.addEventListener('click', (e) => {
+    if (e.target.closest(`.${STG}-label`)) return; // label click handled separately
     e.stopPropagation();
     toggleCollapse(group.id);
+  });
+
+  label.addEventListener('click', (e) => {
+    e.stopPropagation();
+    startInlineRename(chip, label, group);
   });
 
   chip.addEventListener('contextmenu', (e) => {
@@ -474,6 +480,41 @@ function buildChip(group) {
   });
 
   return chip;
+}
+
+function startInlineRename(chipEl, labelEl, group) {
+  if (chipEl.querySelector(`.${STG}-chip-input`)) return; // already editing
+
+  const inp = document.createElement('input');
+  inp.className = `${STG}-chip-input`;
+  inp.value = group.name;
+  // Size the input to the current label width
+  inp.style.width = Math.max(40, labelEl.offsetWidth + 4) + 'px';
+  labelEl.replaceWith(inp);
+  inp.focus();
+  inp.select();
+
+  let done = false;
+  const commit = (save) => {
+    if (done) return;
+    done = true;
+    if (save) {
+      const val = inp.value.trim();
+      if (val && val !== group.name) {
+        group.name = val;
+        saveGroups().catch(console.error);
+      }
+    }
+    renderGroups();
+  };
+
+  inp.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); commit(true); return; }
+    if (e.key === 'Escape') { e.preventDefault(); commit(false); return; }
+    e.stopPropagation();
+  });
+  inp.addEventListener('blur', () => commit(true));
+  inp.addEventListener('click', (e) => e.stopPropagation());
 }
 
 // ─── Context Menu ─────────────────────────────────────────────────────────────
@@ -553,7 +594,7 @@ function injectGroupMenuItems(menu, sheetId) {
       }
     }
     items.push(makeGoogItem('Remove from group', () => removeFromGroup(sheetId)));
-    items.push(makeGoogItem('Delete group', () => confirmDeleteGroup(group.id)));
+    items.push(makeGoogItem('Ungroup', () => ungroupAll(group.id)));
   } else {
     items.push(makeGoogItem('Add to new group', () => promptCreateGroup([sheetId])));
     for (const g of state.groups) {
@@ -598,12 +639,30 @@ function showChipMenu(e, group) {
   dismissMenus();
   const menu = makeMenu(e.clientX, e.clientY);
 
-  addItem(menu, group.collapsed ? '▶  Expand'  : '▾  Collapse', () => toggleCollapse(group.id));
+  addItem(menu, 'Rename', () => {
+    const chipEl = document.querySelector(`.${STG}-group-chip[data-group-id="${group.id}"]`);
+    const labelEl = chipEl?.querySelector(`.${STG}-label`);
+    if (chipEl && labelEl) startInlineRename(chipEl, labelEl, group);
+    else promptRename(group);
+  });
+
+  // Inline color swatches — matches Chrome's chip context menu
+  const colorRow = document.createElement('div');
+  colorRow.className = `${STG}-menu-colors`;
+  for (const c of GROUP_COLORS) {
+    const sw = document.createElement('div');
+    sw.className = `${STG}-swatch${group.color === c.value ? ` ${STG}-swatch-active` : ''}`;
+    sw.style.background = c.value;
+    sw.title = c.name;
+    sw.addEventListener('click', () => { dismissMenus(); changeColor(group.id, c.value); });
+    colorRow.appendChild(sw);
+  }
+  menu.appendChild(colorRow);
+
   addSep(menu);
-  addItem(menu, '✏️  Rename',       () => promptRename(group));
-  addItem(menu, '🎨  Change color', () => showColorPicker(e.clientX, e.clientY, group));
+  addItem(menu, group.collapsed ? 'Expand group' : 'Collapse group', () => toggleCollapse(group.id));
   addSep(menu);
-  addItem(menu, '🗑️  Delete group', () => confirmDeleteGroup(group.id));
+  addItem(menu, 'Ungroup', () => ungroupAll(group.id));
 
   document.body.appendChild(menu);
 }
@@ -820,46 +879,10 @@ function toggleCollapse(groupId) {
   saveGroups().catch(console.error);
 }
 
-function confirmDeleteGroup(groupId) {
-  const group = state.groups.find((g) => g.id === groupId);
-  if (!group) return;
-
-  // Use a modal instead of confirm() (blocked in content scripts)
-  const overlay = document.createElement('div');
-  overlay.className = `${STG}-overlay`;
-
-  const box = document.createElement('div');
-  box.className = `${STG}-modal`;
-
-  const h = document.createElement('h3');
-  h.textContent = `Delete "${group.name}"?`;
-
-  const p = document.createElement('p');
-  p.className = `${STG}-modal-body`;
-  p.textContent = 'Tabs will remain but be ungrouped. This cannot be undone.';
-
-  const btns = document.createElement('div');
-  btns.className = `${STG}-modal-btns`;
-
-  const cancel = document.createElement('button');
-  cancel.className = `${STG}-btn ${STG}-btn-ghost`;
-  cancel.textContent = 'Cancel';
-  cancel.addEventListener('click', () => overlay.remove());
-
-  const del = document.createElement('button');
-  del.className = `${STG}-btn ${STG}-btn-danger`;
-  del.textContent = 'Delete';
-  del.addEventListener('click', () => {
-    overlay.remove();
-    state.groups = state.groups.filter((g) => g.id !== groupId);
-    renderGroups();
-    saveGroups().catch(console.error);
-  });
-
-  btns.append(cancel, del);
-  box.append(h, p, btns);
-  overlay.appendChild(box);
-  document.body.appendChild(overlay);
+function ungroupAll(groupId) {
+  state.groups = state.groups.filter((g) => g.id !== groupId);
+  renderGroups();
+  saveGroups().catch(console.error);
 }
 
 function pruneEmpty() {

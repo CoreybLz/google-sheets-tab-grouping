@@ -67,6 +67,22 @@
   display: none !important;
 }
 
+/* Inline rename input inside the chip */
+.stg-chip-input {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.7) !important;
+  outline: none !important;
+  color: #fff !important;
+  font-family: 'Google Sans', Roboto, Arial, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  padding: 0 !important;
+  min-width: 40px !important;
+  max-width: 120px !important;
+  letter-spacing: 0.02em !important;
+}
+
 /* ── Context menu ──────────────────────────────────────────────────────────── */
 
 .stg-menu {
@@ -100,6 +116,14 @@
   height: 1px !important;
   background: #e8eaed !important;
   margin: 4px 0 !important;
+}
+
+/* Inline color row inside the chip context menu */
+.stg-menu-colors {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  padding: 6px 12px 8px !important;
 }
 
 /* ── Color picker ──────────────────────────────────────────────────────────── */
