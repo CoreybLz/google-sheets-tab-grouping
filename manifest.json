@@ -1,11 +1,14 @@
 {
   "manifest_version": 3,
   "name": "Sheets Tab Groups",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAo+vCUY79R750GBTdHODXtOcONilCI/spFG78D5HaLWJP+4QTdRVFkCpXfziF7VWikfqa1HUcipNJp/HoA6cxOGu6TPC9+YUiYBAfsr5y7vKsVrmkVOb3Tnie+iedIoX0aZDMZk1wamL1qr2K/mjklBq4hdf6SOp4D4nbEGxZ6Ip796KCpqnqW/h3LBEaYud4ieecgFcubjjEBiuvH0/c0yeHxpkAh5nsPr8tpa5xaUCAIVEheC0T/7G7Xviea3vBE/3ZleIU+T4/A7+UtT3fMuWuhEBWFxhoN6jJsa5G9X/YnuNLMdu88+LFRu1YpgWCPatNpL+zFQZ3SNN2BqSEWQIDAQAB",
   "version": "1.0.0",
-  "description": "Group Google Sheets tabs like Chrome Tab Groups — named, color-coded, collapsible, and synced via the spreadsheet itself.",
+  "description": "Group Google Sheets tabs like Chrome Tab Groups — named, color-coded, and synced via the spreadsheet itself.",
   "permissions": [
     "identity",
-    "storage"
+    "storage",
+    "sidePanel",
+    "tabs"
   ],
   "host_permissions": [
     "https://docs.google.com/spreadsheets/*",
@@ -29,15 +32,17 @@
     }
   ],
   "action": {
-    "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     }
   },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
   "oauth2": {
-    "client_id": "998737102718-fnmho8em9bec0b5j4tbru6talc0plptb.apps.googleusercontent.com",
+    "client_id": "998737102718-bhdm8jllk4u6f11fqesjtqp8jhs8m74m.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/spreadsheets",
       "https://www.googleapis.com/auth/userinfo.profile",

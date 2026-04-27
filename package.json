@@ -1,24 +1,26 @@
 {
   "name": "google-sheets-tab-grouping",
   "version": "1.0.0",
-  "description": "",
-  "main": "background.js",
+  "description": "Group Google Sheets tabs like Chrome Tab Groups",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite build --watch",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/CoreybLz/google-sheets-tab-grouping.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/CoreybLz/google-sheets-tab-grouping/issues"
-  },
-  "homepage": "https://github.com/CoreybLz/google-sheets-tab-grouping#readme",
   "dependencies": {
-    "canvas": "^3.2.3"
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "lucide-react": "^0.469.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "vite": "^6.0.7"
   }
 }
